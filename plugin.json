@@ -1,0 +1,11 @@
+{
+  "id": "keyboardLayoutOSD",
+  "name": "Keyboard Layout OSD",
+  "description": "Displays on-screen notification when keyboard layout changes in Niri",
+  "version": "1.0.0",
+  "author": "alfeatingcats",
+  "icon": "keyboard",
+  "type": "daemon",
+  "component": "./KeyboardLayoutWatcher.qml",
+  "permissions": []
+}
