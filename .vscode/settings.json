@@ -1,0 +1,4 @@
+{
+    "qmlFormat.command": "/usr/lib/qt6/bin/qmlformat",
+    "qmlFormat.extraArguments": ["--normalize"]
+}
