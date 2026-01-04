@@ -3,8 +3,7 @@ name: Release Plugin
 on:
   push:
     tags:
-      - 'v*.*.*'
-  workflow_dispatch:
+      - 'v*.*.*' 
 
 jobs:
   validate:
@@ -36,15 +35,21 @@ jobs:
       - name: Extract and validate version
         run: |
           VERSION=$(jq -r '.version' plugin.json)
-          TAG=${GITHUB_REF#refs/tags/v}
           
-          if [ "$VERSION" != "$TAG" ]; then
-            echo "❌ Version mismatch!"
-            echo "plugin.json version: $VERSION"
-            echo "Git tag version: $TAG"
-            exit 1
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            TAG=${GITHUB_REF#refs/tags/v}
+            
+            if [ "$VERSION" != "$TAG" ]; then
+              echo "❌ Version mismatch!"
+              echo "plugin.json version: $VERSION"
+              echo "Git tag version: $TAG"
+              exit 1
+            fi
+            echo "✅ Version matches: $VERSION"
+          else
+            echo "⚠️ Manual workflow run - skipping version validation"
+            echo "Using version from plugin.json: $VERSION"
           fi
-          echo "✅ Version matches: $VERSION"
 
   release:
     name: Create Release
@@ -58,7 +63,13 @@ jobs:
 
       - name: Get version
         id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          else
+            VERSION=$(jq -r '.version' plugin.json)
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create plugin archive
         run: |
@@ -103,6 +114,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: v${{ steps.get_version.outputs.VERSION }}
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
           body_path: release_notes.md
           files: |
             keyboard-layout-osd-v${{ steps.get_version.outputs.VERSION }}.zip
