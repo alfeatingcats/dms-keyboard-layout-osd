@@ -3,7 +3,7 @@
 Beautiful on-screen display notification that shows your current keyboard layout when you switch between languages in Niri compositor.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+![Version](https://img.shields.io/badge/version-1.0.1-green.svg)
 ![DMS](https://img.shields.io/badge/DMS-compatible-purple.svg)
 
 ## ✨ Features
